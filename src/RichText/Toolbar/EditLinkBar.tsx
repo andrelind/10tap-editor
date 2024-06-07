@@ -1,11 +1,11 @@
 import React from 'react';
-import { View, TextInput, TouchableOpacity, Text, Image } from 'react-native';
+import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { Images } from '../../assets';
 import type { EditorTheme } from '../../types';
 
 interface EditLinkBarProps {
   theme: EditorTheme;
-  onBlur: () => void;
+  onBlur: (link?:string) => void;
   onEditLink: (newLink: string) => void;
   onLinkIconClick: () => void;
   initialLink: string | undefined;
@@ -40,9 +40,9 @@ export const EditLinkBar = ({
       </TouchableOpacity>
       <TextInput
         value={link}
-        onBlur={onBlur}
+        onBlur={() => onBlur(link) }
         onChangeText={setLink}
-        placeholder="Type your URL here..."
+        placeholder="Skriv in URL här..."
         placeholderTextColor={theme.toolbar.linkBarTheme.placeholderTextColor}
         autoFocus
         style={theme.toolbar.linkBarTheme.linkInput}
@@ -54,7 +54,7 @@ export const EditLinkBar = ({
           onEditLink(link);
         }}
       >
-        <Text style={theme.toolbar.linkBarTheme.doneButtonText}>Insert</Text>
+        <Text style={theme.toolbar.linkBarTheme.doneButtonText}>Länka</Text>
       </TouchableOpacity>
     </View>
   );

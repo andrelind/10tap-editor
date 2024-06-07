@@ -1,21 +1,21 @@
+import React from 'react';
 import {
   FlatList,
   Image,
-  TouchableOpacity,
-  StyleSheet,
   Platform,
+  StyleSheet,
+  TouchableOpacity,
   View,
 } from 'react-native';
+import type { EditorBridge } from '../../types';
+import { useKeyboard } from '../../utils';
 import { useBridgeState } from '../useBridgeState';
-import React from 'react';
+import { EditLinkBar } from './EditLinkBar';
 import {
   DEFAULT_TOOLBAR_ITEMS,
   HEADING_ITEMS,
   type ToolbarItem,
 } from './actions';
-import { EditLinkBar } from './EditLinkBar';
-import { useKeyboard } from '../../utils';
-import type { EditorBridge } from '../../types';
 
 interface ToolbarProps {
   editor: EditorBridge;
@@ -105,7 +105,12 @@ export function Toolbar({
         <EditLinkBar
           theme={editor.theme}
           initialLink={editorState.activeLink}
-          onBlur={() => setToolbarContext(ToolbarContext.Main)}
+          onBlur={(link) => {
+            if(link && Platform.OS === 'android'){
+              editor.setLink(link);
+            }
+            setToolbarContext(ToolbarContext.Main)
+          }}
           onLinkIconClick={() => {
             setToolbarContext(ToolbarContext.Main);
             editor.focus();
@@ -113,8 +118,7 @@ export function Toolbar({
           onEditLink={(link) => {
             editor.setLink(link);
             editor.focus();
-
-            if (Platform.OS === 'android') {
+           if (Platform.OS === 'android') {
               // On android we dont want to hide the link input before we finished focus on editor
               // Add here 100ms and we can try to find better solution later
               setTimeout(() => {
